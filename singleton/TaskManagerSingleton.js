@@ -1,3 +1,6 @@
+const TaskObserver = require('../observers/TaskObserver');
+
+
 class TaskManagerSingleton {
   constructor() {
       if (!TaskManagerSingleton.instance) {
@@ -9,9 +12,12 @@ class TaskManagerSingleton {
 
   addTask(task) {
       this.tasks.push(task);
-      // Notificar observadores sobre a adição de uma nova tarefa
       TaskObserver.notifyAddition(task);
       console.log("Task added successfully for " + task + ".");
+  }
+
+  listTasks() {
+   return this.tasks
   }
 
 }

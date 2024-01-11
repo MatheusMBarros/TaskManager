@@ -1,7 +1,11 @@
 // TaskFactory.js
+
+const TaskModel = require("../models/TaskModel")
 class TaskFactory {
-  createTask(title, description, dueDate, category) {
-      return new TaskModel(title, description, dueDate, category);
+  async createTask(title, description, dueDate, category) {
+    const newTask = new TaskModel({ title, description, dueDate, category });
+    await newTask.save();
+    return TaskModel(title, description, dueDate, category)
   }
 }
 

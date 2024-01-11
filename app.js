@@ -5,9 +5,8 @@ const MongooseSingleton = require('./singleton/MongooseSingleton');
 const routes = require('./routes');
 const TaskView = require('./View/TaskView');
 
-const app = express(); // Crie a instância do Express
+const app = express(); 
 app.use(express.json());
-
 
 const MONGO_DB_URL = "mongodb+srv://MBarros02:Ma91810815!@cluster0.lbeeypd.mongodb.net/?retryWrites=true&w=majority";
 
@@ -23,9 +22,6 @@ const MONGO_DB_URL = "mongodb+srv://MBarros02:Ma91810815!@cluster0.lbeeypd.mongo
         app.listen(PORT, () => {
             console.log(`Servidor rodando na porta ${PORT}`);
         });
-
-        new TaskView()
-
 
     } catch (error) {
         console.error('Erro ao iniciar o aplicativo:', error);

@@ -11,3 +11,4 @@ class CategoryFactory {
 }
 
 module.exports = new CategoryFactory();
+

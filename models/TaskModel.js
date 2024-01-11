@@ -9,7 +9,6 @@ class TaskModel {
         this.completed = false;
     }
 
-
     static getSchema() {
         return new mongoose.Schema({
             title: { type: String, required: true },
@@ -17,11 +16,10 @@ class TaskModel {
             dueDate: { type: Date, required: true },
             completed: { type: Boolean, default: false },
             category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
-            
         });
     }
 }
 
-const TaskModel = mongoose.model('Task', Task.getSchema());
+const Task = mongoose.model('Task', TaskModel.getSchema());
 
-module.exports = TaskModel;
+module.exports = Task;

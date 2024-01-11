@@ -1,24 +1,26 @@
-const TaskFactory = require('../factories/TaskFactory');
 const TaskManagerSingleton = require('../singleton/TaskManagerSingleton');
+const TaskFactory = require('../factories/TaskFactory')
 
 class TaskController {
-    createTask(title, description, dueDate, category) {
+    createTask(req,res) {
         try{
-            const newTask = TaskFactory.createTask(title, description, dueDate, category);
+            const task = req.body
+            const newTask = TaskFactory.createTask(task);
             TaskManagerSingleton.addTask(newTask);
+            Ta
             res.status(201).json(newTask);
     }catch(e){
             console.error(e) 
     }
     }   
 
-    getTask(id){
-        return id;
+    listTasks(req,res) {
+       let tasks = TaskManagerSingleton.listTasks();
+       res.status(200).json(tasks);
+
     }
+
 
 }
 
 module.exports = new TaskController();
-
-
-// Factory Method

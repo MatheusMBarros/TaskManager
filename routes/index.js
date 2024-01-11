@@ -11,6 +11,6 @@ router.get('/categories/:categoryId', CategoryController.getCategory);
 
 // Rotas para Task
 router.post('/tasks', TaskController.createTask);
-router.get('/tasks/:taskId', TaskController.getTask);
+router.get('/tasks', TaskController.listTasks)
 
 module.exports = router;

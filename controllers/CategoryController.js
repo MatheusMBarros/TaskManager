@@ -1,4 +1,5 @@
 const CategoryFactory = require("../factories/CategoryFactory");
+const CategoryModel = require("../models/CategoryModel");
 
 class CategoryController {
     async createCategory(req, res) {
@@ -26,7 +27,8 @@ class CategoryController {
             const categories = await CategoryModel.find();
             res.json(categories);
         } catch (error) {
-            res.status(500).json({ error: 'Erro ao listar categorias' });
+        
+            res.status(500).json({ error: error.message });
         }
     }
 }

@@ -18,7 +18,6 @@ class TaskObserver {
       });
   }
 
-  // Outros métodos de observação
 }
 
 module.exports = TaskObserver;
