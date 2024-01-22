@@ -2,19 +2,23 @@ const TaskManagerSingleton = require('../singleton/TaskManagerSingleton');
 const TaskModel = require('../models/TaskModel');
 const TaskPrototype = require('../prototype/TaskPrototype');
 const TaskFactory = require('../factories/TaskFactory')
+const TaskObserver = require('../observers/TaskObserver')
 class TaskController {
   async createTask(req, res) {
     try {
       const { title, dueDate, description, category } = req.body;
       const newTask = await TaskFactory.createTask(title, description, dueDate, category);
+
       TaskManagerSingleton.addTask(newTask);
+
+      TaskObserver.notifyAddition(newTask);
+
       res.status(201).json(newTask);
     } catch (e) {
       console.error(e);
       res.status(500).send("Erro interno no servidor");
     }
   }
-
   async listTasks(req, res) {
     try {
       const tasks = await TaskModel.find();

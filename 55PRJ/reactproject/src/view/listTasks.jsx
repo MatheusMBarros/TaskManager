@@ -1,4 +1,4 @@
-// ./backend/view/listTasks.jsx
+// .view/listTasks.jsx
 
 import React, { useEffect, useState } from "react";
 import { listTasks, listCategories, deleteTask } from "../Requests/resquests";
@@ -24,6 +24,9 @@ const DeleteTaskButton = ({ taskId, onDelete }) => {
 	return <button onClick={handleDelete}>Delete Task</button>;
 };
 
+
+
+
 export function ListTasksView() {
 	const [tasks, setTasks] = useState([]);
 	const [categories, setCategories] = useState([]);
@@ -42,8 +45,8 @@ export function ListTasksView() {
 			}
 		};
 
-		fetchData();
-	}, [tasks]); // Empty dependency array
+		fetchData(); // Chame a função para buscar dados imediatamente
+	}, [tasks]); // Dependency array vazio para garantir que seja executado apenas uma vez
 
 	const groupTasksByCategory = (categories, tasks) => {
 		const groupedTasks = {};
@@ -66,8 +69,6 @@ export function ListTasksView() {
 			const categoryId = task.category ? task.category._id : "Uncategorized";
 			if (!groupedTasks[categoryId]) {
 				console.error(`Category '${categoryId}' not found. Task:`, task);
-				console.log(task);
-				console.log();
 				groupedTasks[categoryId] = [];
 			}
 			groupedTasks[categoryId].push(task);
@@ -87,26 +88,13 @@ export function ListTasksView() {
 		<>
 			{Object.entries(groupedTasks).map(([categoryId, categoryTasks]) => (
 				<div key={categoryId}>
-					<h2>
-						{categories.find((cat) => cat._id === categoryId)?.name ||
-							"Uncategorized"}
-					</h2>
 					<table>
-						<thead>
-							<tr>
-								<th>Title</th>
-								<th>Due Date</th>
-								<th>Action</th>
-							</tr>
-						</thead>
 						<tbody>
 							{categoryTasks.map((task) => (
 								<tr key={task._id}>
 									<td></td>
 									<td>{task.title}</td>
 									<td>{task.dueDate}</td>
-									<td>{task.category}</td>
-
 									<td>
 										<DeleteTaskButton
 											taskId={task._id}

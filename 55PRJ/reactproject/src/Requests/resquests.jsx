@@ -7,7 +7,6 @@ export async function listCategories() {
 
 export async function listTasks() {
 	const tasks = await axios.get("http://localhost:3333/api/tasks");
-	console.log(tasks.data);
 	return tasks.data;
 }
 
@@ -63,6 +62,27 @@ export async function deleteTask(taskId) {
 		);
 		if (response.status >= 200 && response.status < 300) {
 			console.log(`Task with ID ${taskId} deleted successfully.`);
+		} else {
+			console.error(
+				`Error in request: ${response.status} - ${response.statusText}`
+			);
+			throw new Error("Error in request");
+		}
+	} catch (error) {
+		console.error("Error during the request:", error.message);
+		throw new Error("Error during the request");
+	}
+}
+
+export async function createCategory(categoryData) {
+	try {
+		const response = await axios.post(
+			"http://localhost:3333/api/categories",
+			categoryData
+		);
+
+		if (response.status >= 200 && response.status < 300) {
+			console.log("Category created successfully.");
 		} else {
 			console.error(
 				`Error in request: ${response.status} - ${response.statusText}`

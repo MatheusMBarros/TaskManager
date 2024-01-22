@@ -3,6 +3,7 @@ class TaskObserver {
 
   static addObserver(observer) {
       TaskObserver.observers.push(observer);
+      console.log('addObserver: ' + observer.name)
   }
 
   static removeObserver(observer) {
@@ -15,6 +16,7 @@ class TaskObserver {
   static notifyAddition(task) {
       TaskObserver.observers.forEach(observer => {
           observer.updateAddition(task);
+          console.log('Task added successfully;', observer)
       });
   }
 
