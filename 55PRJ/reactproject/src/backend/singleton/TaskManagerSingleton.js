@@ -17,6 +17,8 @@ class TaskManagerSingleton {
       console.log("Task added successfully for " + task + ".");
   }
 
+    
+
 }
 
 const taskManager = new TaskManagerSingleton();

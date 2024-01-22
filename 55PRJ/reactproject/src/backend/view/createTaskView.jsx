@@ -1,13 +1,28 @@
-import React, { useState } from "react";
-import { createTask } from "../Requests/resquests";
+import React, { useState, useEffect } from "react";
+import { createTask, listCategories } from "../Requests/resquests";
 
 function CreateTaskView() {
 	const [taskData, setTaskData] = useState({
 		title: "",
 		dueDate: "",
 		description: "",
-		category: "",
+		category: "", // Store category ID
 	});
+
+	const [categories, setCategories] = useState([]);
+
+	useEffect(() => {
+		const fetchCategories = async () => {
+			try {
+				const categoriesData = await listCategories();
+				setCategories(categoriesData);
+			} catch (error) {
+				console.error("Error fetching categories:", error.message);
+			}
+		};
+
+		fetchCategories();
+	}, []);
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -21,21 +36,29 @@ function CreateTaskView() {
 		e.preventDefault();
 
 		try {
-			// Chame a função createTask e passe os dados da tarefa
-			await createTask(taskData);
+			// Ensure the selected category exists
+			const selectedCategory = categories.find(
+				(category) => category._id === taskData.category
+			);
 
-			// Limpe os dados do formulário ou faça qualquer ação adicional necessária
+			if (!selectedCategory) {
+				console.error("Invalid category selected");
+				return;
+			}
+
+			await createTask(taskData);
+			console.log("Task created:", taskData);
+
+			// Clear the form data or perform any additional necessary actions
 			setTaskData({
 				title: "",
 				dueDate: "",
 				description: "",
 				category: "",
 			});
-
-			console.log("Task created:", taskData);
 		} catch (error) {
 			console.error("Error creating task:", error.message);
-			// Lide com erros, se necessário
+			// Handle errors, if necessary
 		}
 	};
 
@@ -77,12 +100,19 @@ function CreateTaskView() {
 
 				<label>
 					Category:
-					<input
-						type="text"
+					<select
 						name="category"
 						value={taskData.category}
-						onChange={handleInputChange}
-					/>
+						onChange={handleInputChange}>
+						<option value="" disabled>
+							Select a category
+						</option>
+						{categories.map((category) => (
+							<option key={category._id} value={category._id}>
+								{category.name}
+							</option>
+						))}
+					</select>
 				</label>
 				<br />
 

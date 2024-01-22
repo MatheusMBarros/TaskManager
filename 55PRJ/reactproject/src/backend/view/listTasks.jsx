@@ -1,34 +1,124 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+// ./backend/view/listTasks.jsx
+
 import React, { useEffect, useState } from "react";
-import { listTasks } from "../Requests/resquests";
+import { listTasks, listCategories, deleteTask } from "../Requests/resquests";
+
+// Command Pattern: DeleteTaskCommand
+class DeleteTaskCommand {
+	constructor(taskId, onDelete) {
+		this.taskId = taskId;
+		this.onDelete = onDelete;
+	}
+
+	execute() {
+		this.onDelete(this.taskId);
+	}
+}
+
+const DeleteTaskButton = ({ taskId, onDelete }) => {
+	const handleDelete = () => {
+		const deleteTaskCommand = new DeleteTaskCommand(taskId, onDelete);
+		deleteTaskCommand.execute();
+	};
+
+	return <button onClick={handleDelete}>Delete Task</button>;
+};
 
 export function ListTasksView() {
 	const [tasks, setTasks] = useState([]);
+	const [categories, setCategories] = useState([]);
 
 	useEffect(() => {
-		const fetchCategories = async () => {
+		const fetchData = async () => {
 			try {
-				const categoriesData = await listTasks();
-				setTasks(categoriesData);
-				console.log(categoriesData);
+				const [tasksData, categoriesData] = await Promise.all([
+					listTasks(),
+					listCategories(),
+				]);
+				setTasks(tasksData);
+				setCategories(categoriesData);
 			} catch (error) {
-				console.error("Error fetching tasks:", error);
+				console.error("Error fetching data:", error);
 			}
 		};
 
-		fetchCategories();
-	}, []);
+		fetchData();
+	}, [tasks]); // Empty dependency array
+
+	const groupTasksByCategory = (categories, tasks) => {
+		const groupedTasks = {};
+
+		if (!categories || !categories.length) {
+			console.error(
+				"No categories found. All tasks will be Uncategorized.",
+				tasks
+			);
+			groupedTasks["Uncategorized"] = tasks;
+			return groupedTasks;
+		}
+
+		categories.forEach((category) => {
+			groupedTasks[category._id] = [];
+		});
+
+		// Assign tasks to their respective categories
+		tasks.forEach((task) => {
+			const categoryId = task.category ? task.category._id : "Uncategorized";
+			if (!groupedTasks[categoryId]) {
+				console.error(`Category '${categoryId}' not found. Task:`, task);
+				console.log(task);
+				console.log();
+				groupedTasks[categoryId] = [];
+			}
+			groupedTasks[categoryId].push(task);
+		});
+
+		return groupedTasks;
+	};
+
+	const handleDeleteTask = (taskId) => {
+		deleteTask(taskId);
+		console.log("Deleting task with ID:", taskId);
+	};
+
+	const groupedTasks = groupTasksByCategory(categories, tasks);
 
 	return (
 		<>
-			{tasks.map((task) => (
-				<div key={task.id}>
-					{task.title}
-					{task.dueDate}
+			{Object.entries(groupedTasks).map(([categoryId, categoryTasks]) => (
+				<div key={categoryId}>
+					<h2>
+						{categories.find((cat) => cat._id === categoryId)?.name ||
+							"Uncategorized"}
+					</h2>
+					<table>
+						<thead>
+							<tr>
+								<th>Title</th>
+								<th>Due Date</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{categoryTasks.map((task) => (
+								<tr key={task._id}>
+									<td></td>
+									<td>{task.title}</td>
+									<td>{task.dueDate}</td>
+									<td>{task.category}</td>
+
+									<td>
+										<DeleteTaskButton
+											taskId={task._id}
+											onDelete={handleDeleteTask}
+										/>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
 			))}
 		</>
 	);
 }
-
-export default ListTasksView;

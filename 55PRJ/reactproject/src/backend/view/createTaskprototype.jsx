@@ -98,5 +98,4 @@ function CreateTaskCopyView() {
 		</div>
 	);
 }
-
 export default CreateTaskCopyView;

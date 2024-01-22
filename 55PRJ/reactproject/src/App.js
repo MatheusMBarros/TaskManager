@@ -1,14 +1,14 @@
-import ListCategoriesView from "./backend/view/listCategoriesView";
-import ListTasksView from "./backend/view/listTasks";
+import {ListTasksView} from "./backend/view/listTasks";
 import CreateTaskView from "./backend/view/createTaskView";
 import "./app.css"
+import CreateTaskCopyView from "./backend/view/createTaskprototype";
 function App() {
 
   return (
 <>
 <CreateTaskView></CreateTaskView>
-<ListCategoriesView></ListCategoriesView>
 <ListTasksView></ListTasksView>
+<CreateTaskCopyView></CreateTaskCopyView>
 </>
   );
 }

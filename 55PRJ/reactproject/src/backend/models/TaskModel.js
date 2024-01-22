@@ -18,6 +18,8 @@ class TaskModel {
             category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
         });
     }
+
+    
 }
 
 const Task = mongoose.model('Task', TaskModel.getSchema());

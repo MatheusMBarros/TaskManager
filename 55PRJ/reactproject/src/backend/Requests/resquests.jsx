@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 
 export async function listCategories() {
@@ -15,7 +14,7 @@ export async function listTasks() {
 export async function createTask(taskData) {
 	try {
 		const response = await axios.post(
-			"http://localhost:3333/api/task",
+			"http://localhost:3333/api/tasks",
 			taskData
 		);
 
@@ -54,5 +53,24 @@ export async function createTaskCopy(taskData) {
 	} catch (e) {
 		console.error("Erro durante a solicitação:", e.message);
 		throw new Error("Erro durante a solicitação");
+	}
+}
+
+export async function deleteTask(taskId) {
+	try {
+		const response = await axios.delete(
+			`http://localhost:3333/api/tasks/${taskId}`
+		);
+		if (response.status >= 200 && response.status < 300) {
+			console.log(`Task with ID ${taskId} deleted successfully.`);
+		} else {
+			console.error(
+				`Error in request: ${response.status} - ${response.statusText}`
+			);
+			throw new Error("Error in request");
+		}
+	} catch (error) {
+		console.error("Error during the request:", error.message);
+		throw new Error("Error during the request");
 	}
 }

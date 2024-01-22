@@ -10,6 +10,7 @@ router.get('/categories/:categoryId', CategoryController.getCategory);
 
 router.post('/tasks', TaskController.createTask);
 router.get('/tasks', TaskController.listTasks)
+router.delete('/tasks/:id', TaskController.deleteTask);
 router.put('/tasksCopy', TaskController.createTaskCopy)
 
 module.exports = router;
