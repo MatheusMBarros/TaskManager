@@ -6,8 +6,7 @@ const TaskModel = require('../models/TaskModel')
       title: existingTask.title,
       description: existingTask.description,
       dueDate: existingTask.dueDate,
-      category: existingTask.category,
-      ...modifications, // Aplica modificações fornecidas
+      category: existingTask.category
     });
 
     return newTask;
