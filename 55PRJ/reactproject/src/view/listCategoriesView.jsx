@@ -10,7 +10,6 @@ export function ListCategoriesView() {
 			try {
 				const categoriesData = await listCategories();
 				setCategories(categoriesData);
-				console.log(categoriesData);
 			} catch (error) {
 				console.error("Error fetching categories:", error);
 			}

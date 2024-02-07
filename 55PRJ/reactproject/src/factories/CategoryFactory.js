@@ -1,24 +1,20 @@
-// CategoryFactory.js
-
-const CategoryModel = require('../models/CategoryModel');
-
 // AbstractFactory.js
-
 class AbstractFactory {
-  create(name) {}
+  async create(name) {}
 }
 
 module.exports = AbstractFactory;
 
-// ConcreteFactory.js
-class ConcreteFactory extends AbstractFactory {
+// CategoryFactory.js
+const CategoryModel = require('../models/CategoryModel');
+
+class CategoryFactory extends AbstractFactory {
   async create(name) {
     console.log('Creating category with name ' + name);
     const newCategory = new CategoryModel({ name });
     await newCategory.save();
-    return { "nome da categoria salva": name };
+    return newCategory;
   }
 }
 
-module.exports = ConcreteFactory;
-
+module.exports = CategoryFactory;

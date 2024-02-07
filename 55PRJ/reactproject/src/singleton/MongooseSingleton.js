@@ -3,12 +3,7 @@ const mongoose = require('mongoose');
 
 class MongooseSingleton {
     constructor() {
-        if (!MongooseSingleton.instance) {
-            this.isConnected = false;
-            MongooseSingleton.instance = this;
-        }
-
-        return MongooseSingleton.instance;
+        this.isConnected = false;
     }
 
     async connect(url, options) {
@@ -27,6 +22,13 @@ class MongooseSingleton {
 
         return mongoose.connection;
     }
+
+    static getInstance() {
+        if (!MongooseSingleton.instance) {
+            MongooseSingleton.instance = new MongooseSingleton();
+        }
+        return MongooseSingleton.instance;
+    }
 }
 
-module.exports = new MongooseSingleton();
+module.exports = MongooseSingleton;

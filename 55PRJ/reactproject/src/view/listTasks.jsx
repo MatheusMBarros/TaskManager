@@ -2,30 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { listTasks, listCategories, deleteTask } from "../Requests/resquests";
-
-// Command Pattern: DeleteTaskCommand
-class DeleteTaskCommand {
-	constructor(taskId, onDelete) {
-		this.taskId = taskId;
-		this.onDelete = onDelete;
-	}
-
-	execute() {
-		this.onDelete(this.taskId);
-	}
-}
-
-const DeleteTaskButton = ({ taskId, onDelete }) => {
-	const handleDelete = () => {
-		const deleteTaskCommand = new DeleteTaskCommand(taskId, onDelete);
-		deleteTaskCommand.execute();
-	};
-
-	return <button onClick={handleDelete}>Delete Task</button>;
-};
-
-
-
+import DeleteTaskButton from "../command/deleteTaskCommand";
 
 export function ListTasksView() {
 	const [tasks, setTasks] = useState([]);
@@ -46,20 +23,16 @@ export function ListTasksView() {
 		};
 
 		fetchData(); // Chame a função para buscar dados imediatamente
-	}, [tasks]); // Dependency array vazio para garantir que seja executado apenas uma vez
+	}, []); // Remova `tasks` do array de dependências
 
 	const groupTasksByCategory = (categories, tasks) => {
 		const groupedTasks = {};
 
 		if (!categories || !categories.length) {
-			console.error(
-				"No categories found. All tasks will be Uncategorized.",
-				tasks
-			);
+			console.error("No categories found. All tasks will be Uncategorized.");
 			groupedTasks["Uncategorized"] = tasks;
 			return groupedTasks;
 		}
-
 		categories.forEach((category) => {
 			groupedTasks[category._id] = [];
 		});

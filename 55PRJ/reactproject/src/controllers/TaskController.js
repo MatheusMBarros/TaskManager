@@ -1,16 +1,18 @@
-const TaskManagerSingleton = require('../singleton/TaskManagerSingleton');
 const TaskModel = require('../models/TaskModel');
 const TaskPrototype = require('../prototype/TaskPrototype');
-const TaskFactory = require('../factories/TaskFactory')
 const TaskObserver = require('../observers/TaskObserver')
+const EmailNotifier = require('../observers/EmailNotifier'); // Supondo que EmailNotifier seja um observador de e-mail
+
 class TaskController {
+  constructor() {
+    TaskObserver.addObserver(new EmailNotifier());
+  }
+
   async createTask(req, res) {
     try {
       const { title, dueDate, description, category } = req.body;
-      const newTask = await TaskFactory.createTask(title, description, dueDate, category);
-
-      TaskManagerSingleton.addTask(newTask);
-
+      const newTask = new TaskModel(title, description, dueDate, category);
+      
       TaskObserver.notifyAddition(newTask);
 
       res.status(201).json(newTask);
@@ -19,6 +21,8 @@ class TaskController {
       res.status(500).send("Erro interno no servidor");
     }
   }
+  
+
   async listTasks(req, res) {
     try {
       const tasks = await TaskModel.find();
@@ -43,8 +47,7 @@ class TaskController {
       const taskPrototype = new TaskPrototype();
       const newTask = taskPrototype.createTaskCopy(existingTask.toJSON(), modifications);
 
-      // Adicione a nova tarefa ao gerenciador de tarefas (se necessário)
-      TaskManagerSingleton.addTask(newTask);
+      // Não é necessário notificar os observadores ao criar uma cópia, pois isso já é feito ao criar uma nova tarefa
 
       res.status(201).json(newTask);
     } catch (error) {

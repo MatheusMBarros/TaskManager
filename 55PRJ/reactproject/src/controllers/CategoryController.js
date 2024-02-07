@@ -1,5 +1,4 @@
-// CategoryController.js
-const CategoryFactory = require("../factories/CategoryFactory"); // Adjust the import statement based on your file structure
+const CategoryFactory = require("../factories/CategoryFactory");
 const CategoryModel = require("../models/CategoryModel");
 
 class CategoryController {
@@ -9,10 +8,7 @@ class CategoryController {
   
     async createCategory(req, res) {
       try {
-        // Ensure that `this` refers to the correct instance of CategoryController
-        console.log(this.categoryFactory); // Add this line for debugging
-  
-        var categoryName = await this.categoryFactory.create(req.body.name);
+        const categoryName = await this.categoryFactory.create(req.body.name); // Use a fábrica para criar uma nova categoria
         res.status(201).json(categoryName);
       } catch (error) {
         res.status(500).json({ error: 'Erro ao criar categoria', details: error.message });
@@ -38,7 +34,7 @@ class CategoryController {
         res.status(500).json({ error: error.message });
       }
     }
-  }
-  
-  // Export the class instance instead of the class itself
-  module.exports = new CategoryController();
+}
+
+// Export the class instance instead of the class itself
+module.exports = new CategoryController();
